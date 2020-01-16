@@ -5,6 +5,8 @@
  */
 package code;
 
+import java.awt.Image;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
 /**
@@ -13,14 +15,82 @@ import javax.swing.JButton;
  */
 public class VentanaAhorcado extends javax.swing.JFrame {
 
-    private void checkButton(JButton button){
+    int failNum = 0;
+    
+    int niceNum = 0;
+    
+    String hiddenWord = "CETYS";
+
+    private void checkButton(JButton button) {
         button.setEnabled(false);
+        checkLetter((button.getText()));
     }
-    /**
-     * Creates new form VentanaAhorcado
-     */
+    
+    private void checkLetter(String letter){
+        String hyphenWord = wordLabel.getText();
+        if(hiddenWord.contains(letter)){
+            //En este caso la letra sí que está, por lo tanto aparecerá
+            //en la zona de guiones.
+            char pressedLetter = letter.charAt(0);
+            for(int i=0;i<hiddenWord.length();i++){
+                if(hiddenWord.charAt(i)==pressedLetter){
+                    hyphenWord = hyphenWord.substring(0,2*i) + letter + hyphenWord.substring(2*i+1);
+                    wordLabel.setText(hyphenWord);
+                    niceNum++;
+                    if(niceNum==hiddenWord.length()){
+                        failNum = -1;
+                        drawImg();
+                    }
+                }
+            }
+            
+        }
+        else{
+            failNum++;
+            drawImg();
+        }
+    }
+
+    //cambia la imagen en función del estado del jugador
+    private void drawImg() {
+        String nameImg = "";
+        switch (failNum) {
+            case -1:
+                nameImg = "/img/acertasteTodo.png";
+                break;
+            case 0:
+                nameImg = "/img/ahorcado_0.png";
+                break;
+            case 1:
+                nameImg = "/img/ahorcado_1.png";
+                break;
+            case 2:
+                nameImg = "/img/ahorcado_2.png";
+                break;
+            case 3:
+                nameImg = "/img/ahorcado_3.png";
+                break;
+            case 4:
+                nameImg = "/img/ahorcado_4.png";
+                break;
+            case 5:
+                nameImg = "/img/ahorcado_5.png";
+                break;
+            default:
+                nameImg = "/img/ahorcado_fin.png";
+                break;
+        }
+        ImageIcon myImg = new ImageIcon(
+                new ImageIcon(getClass().getResource(nameImg))
+                        .getImage()
+                        .getScaledInstance(ImgLabel.getWidth(), ImgLabel.getHeight(), Image.SCALE_DEFAULT)
+        );
+        ImgLabel.setIcon(myImg);
+    }
+
     public VentanaAhorcado() {
         initComponents();
+        drawImg();
     }
 
     /**
@@ -32,7 +102,7 @@ public class VentanaAhorcado extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        wordLabel = new javax.swing.JLabel();
         A = new javax.swing.JButton();
         B = new javax.swing.JButton();
         C = new javax.swing.JButton();
@@ -60,12 +130,13 @@ public class VentanaAhorcado extends javax.swing.JFrame {
         X = new javax.swing.JButton();
         Y = new javax.swing.JButton();
         Z = new javax.swing.JButton();
+        ImgLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Monospaced", 1, 24)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("_ _ _ _ _");
+        wordLabel.setFont(new java.awt.Font("Monospaced", 1, 24)); // NOI18N
+        wordLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        wordLabel.setText("_ _ _ _ _");
 
         A.setFont(new java.awt.Font("Monospaced", 1, 24)); // NOI18N
         A.setText("A");
@@ -290,27 +361,9 @@ public class VentanaAhorcado extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(wordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(A)
-                                .addGap(18, 18, 18)
-                                .addComponent(B)
-                                .addGap(18, 18, 18)
-                                .addComponent(C)
-                                .addGap(18, 18, 18)
-                                .addComponent(D)
-                                .addGap(18, 18, 18)
-                                .addComponent(E)
-                                .addGap(18, 18, 18)
-                                .addComponent(F)
-                                .addGap(18, 18, 18)
-                                .addComponent(G)
-                                .addGap(18, 18, 18)
-                                .addComponent(H)
-                                .addGap(18, 18, 18)
-                                .addComponent(I))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(J)
                                 .addGap(18, 18, 18)
@@ -346,7 +399,28 @@ public class VentanaAhorcado extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(Y)
                                 .addGap(18, 18, 18)
-                                .addComponent(Z)))
+                                .addComponent(Z))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(A)
+                                .addGap(18, 18, 18)
+                                .addComponent(B)
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ImgLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(C)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(D)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(E)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(F)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(G)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(H)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(I)))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -354,8 +428,10 @@ public class VentanaAhorcado extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 279, Short.MAX_VALUE)
+                .addComponent(wordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ImgLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(A)
                     .addComponent(B)
@@ -399,7 +475,7 @@ public class VentanaAhorcado extends javax.swing.JFrame {
     }//GEN-LAST:event_AActionPerformed
 
     private void BActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BActionPerformed
-       checkButton((JButton) evt.getSource());
+        checkButton((JButton) evt.getSource());
     }//GEN-LAST:event_BActionPerformed
 
     private void CActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CActionPerformed
@@ -547,6 +623,7 @@ public class VentanaAhorcado extends javax.swing.JFrame {
     private javax.swing.JButton G;
     private javax.swing.JButton H;
     private javax.swing.JButton I;
+    private javax.swing.JLabel ImgLabel;
     private javax.swing.JButton J;
     private javax.swing.JButton K;
     private javax.swing.JButton L;
@@ -564,7 +641,7 @@ public class VentanaAhorcado extends javax.swing.JFrame {
     private javax.swing.JButton X;
     private javax.swing.JButton Y;
     private javax.swing.JButton Z;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel wordLabel;
     private javax.swing.JButton Ñ;
     // End of variables declaration//GEN-END:variables
 }
