@@ -6,6 +6,7 @@
 package code;
 
 import java.awt.Image;
+import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -16,37 +17,62 @@ import javax.swing.JButton;
 public class VentanaAhorcado extends javax.swing.JFrame {
 
     int failNum = 0;
-    
     int niceNum = 0;
-    
-    String hiddenWord = "CETYS";
+    boolean gameOver = false;
+
+    String hiddenWord = chooseWord();
+
+    public VentanaAhorcado() {
+        initComponents();
+        drawImg();
+        //Inicializo el jLabel en el que se muestran los guiones bajos
+        String auxiliar = "";
+        for (int i = 0; i < hiddenWord.length(); i++) {
+            auxiliar = auxiliar + "_ ";
+        }
+        wordLabel.setText(auxiliar);
+    }
+
+    //chooseWord va a seleccionar una palabra al azar de un array de palabras.
+    private String chooseWord() {
+        String[] wordList = {"ELRESPLANDOR", "STARWARS", "JURASICPARK", "HARRYPOTTER", "SPIDERMAN"};
+        Random random = new Random();
+        int position = random.nextInt(wordList.length);
+        return wordList[position].toUpperCase();
+    }
 
     private void checkButton(JButton button) {
-        button.setEnabled(false);
-        checkLetter((button.getText()));
+        if (!gameOver) {
+            button.setEnabled(false);
+            checkLetter((button.getText()));
+        }
     }
-    
-    private void checkLetter(String letter){
+
+    private void checkLetter(String letter) {
         String hyphenWord = wordLabel.getText();
-        if(hiddenWord.contains(letter)){
+        if (hiddenWord.contains(letter)) {
             //En este caso la letra sí que está, por lo tanto aparecerá
             //en la zona de guiones.
             char pressedLetter = letter.charAt(0);
-            for(int i=0;i<hiddenWord.length();i++){
-                if(hiddenWord.charAt(i)==pressedLetter){
-                    hyphenWord = hyphenWord.substring(0,2*i) + letter + hyphenWord.substring(2*i+1);
+            for (int i = 0; i < hiddenWord.length(); i++) {
+                if (hiddenWord.charAt(i) == pressedLetter) {
+                    hyphenWord = hyphenWord.substring(0, 2 * i) + letter + hyphenWord.substring(2 * i + 1);
                     wordLabel.setText(hyphenWord);
                     niceNum++;
-                    if(niceNum==hiddenWord.length()){
+                    if (niceNum == hiddenWord.length()) {
                         failNum = -1;
                         drawImg();
+                        gameOver = true;
+                        
                     }
                 }
             }
-            
-        }
-        else{
+
+        } else {
             failNum++;
+            if (failNum>=6){
+                gameOver = true;
+            }
             drawImg();
         }
     }
@@ -86,11 +112,6 @@ public class VentanaAhorcado extends javax.swing.JFrame {
                         .getScaledInstance(ImgLabel.getWidth(), ImgLabel.getHeight(), Image.SCALE_DEFAULT)
         );
         ImgLabel.setIcon(myImg);
-    }
-
-    public VentanaAhorcado() {
-        initComponents();
-        drawImg();
     }
 
     /**
